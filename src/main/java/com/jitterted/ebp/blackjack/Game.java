@@ -41,15 +41,29 @@ public class Game {
   public void initialDeal() {
 
     // deal first round of cards, players first
-    playerHand.add(deck.draw());
-    dealerHand.add(deck.draw());
+    dealCards();
 
     // deal next round of cards
+    dealCards();
+  }
+
+  private void dealCards() {
     playerHand.add(deck.draw());
     dealerHand.add(deck.draw());
   }
 
   public void play() {
+
+    boolean playerBusted = getPlayersDecision();
+
+    dealerMakesItsChoice(playerBusted);
+
+    displayFinalGameState();
+
+    displayPlayerBustedMessage(playerBusted);
+  }
+
+  private boolean getPlayersDecision() {
     // get Player's decision: hit until they stand, then they're done (or they go bust)
     boolean playerBusted = false;
     while (!playerBusted) {
@@ -67,16 +81,10 @@ public class Game {
         System.out.println("You need to [H]it or [S]tand");
       }
     }
+    return playerBusted;
+  }
 
-    // Dealer makes its choice automatically based on a simple heuristic (<=16, hit, 17>stand)
-    if (!playerBusted) {
-      while (handValueOf(dealerHand) <= 16) {
-        dealerHand.add(deck.draw());
-      }
-    }
-
-    displayFinalGameState();
-
+  private void displayPlayerBustedMessage(boolean playerBusted) {
     if (playerBusted) {
       System.out.println("You Busted, so you lose.  💸");
     } else if (handValueOf(dealerHand) > 21) {
@@ -90,6 +98,15 @@ public class Game {
     }
   }
 
+  private void dealerMakesItsChoice(boolean playerBusted) {
+    if (!playerBusted) {
+      while (handValueOf(dealerHand) <= 16) {
+        dealerHand.add(deck.draw());
+      }
+    }
+  }
+
+  // Too long because its not really clear.
   public int handValueOf(List<Card> hand) {
     int handValue = hand
         .stream()
@@ -115,6 +132,7 @@ public class Game {
     return scanner.nextLine();
   }
 
+  //To long because it has repeated code
   private void displayGameState() {
     System.out.print(ansi().eraseScreen().cursor(1, 1));
     System.out.println("Dealer has: ");
@@ -123,10 +141,7 @@ public class Game {
     // second card is the hole card, which is hidden
     displayBackOfCard();
 
-    System.out.println();
-    System.out.println("Player has: ");
-    displayHand(playerHand);
-    System.out.println(" (" + handValueOf(playerHand) + ")");
+    displayPlayerState();
   }
 
   private void displayBackOfCard() {
@@ -143,6 +158,7 @@ public class Game {
             .a("└─────────┘"));
   }
 
+  //Too long. But if you are good with streams it might be acceptable
   private void displayHand(List<Card> hand) {
     System.out.println(hand.stream()
                            .map(Card::display)
@@ -150,15 +166,24 @@ public class Game {
                                ansi().cursorUp(6).cursorRight(1).toString())));
   }
 
+  //Too long because it is duplicated
   private void displayFinalGameState() {
-    System.out.print(ansi().eraseScreen().cursor(1, 1));
-    System.out.println("Dealer has: ");
-    displayHand(dealerHand);
-    System.out.println(" (" + handValueOf(dealerHand) + ")");
+    displayDealerState();
 
+    displayPlayerState();
+  }
+
+  private void displayPlayerState() {
     System.out.println();
     System.out.println("Player has: ");
     displayHand(playerHand);
     System.out.println(" (" + handValueOf(playerHand) + ")");
+  }
+
+  private void displayDealerState() {
+    System.out.print(ansi().eraseScreen().cursor(1, 1));
+    System.out.println("Dealer has: ");
+    displayHand(dealerHand);
+    System.out.println(" (" + handValueOf(dealerHand) + ")");
   }
 }

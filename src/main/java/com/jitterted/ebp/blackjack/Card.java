@@ -23,7 +23,19 @@ public class Card {
     }
   }
 
+  //Too long
   public String display() {
+    String[] lines = displayStrings();
+
+    Ansi.Color cardColor = "♥♦".contains(suit) ? Ansi.Color.RED : Ansi.Color.BLACK;
+    return ansi()
+        .fg(cardColor).toString()
+        + String.join(ansi().cursorDown(1)
+                            .cursorLeft(11)
+                            .toString(), lines);
+  }
+
+  private String[] displayStrings() {
     String[] lines = new String[7];
     lines[0] = "┌─────────┐";
     lines[1] = String.format("│%s%s       │", rank, rank.equals("10") ? "" : " ");
@@ -32,13 +44,7 @@ public class Card {
     lines[4] = "│         │";
     lines[5] = String.format("│       %s%s│", rank.equals("10") ? "" : " ", rank);
     lines[6] = "└─────────┘";
-
-    Ansi.Color cardColor = "♥♦".contains(suit) ? Ansi.Color.RED : Ansi.Color.BLACK;
-    return ansi()
-        .fg(cardColor).toString()
-        + String.join(ansi().cursorDown(1)
-                            .cursorLeft(11)
-                            .toString(), lines);
+    return lines;
   }
 
   @Override
