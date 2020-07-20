@@ -25,17 +25,27 @@ public class Card {
 
   //Too long
   public String display() {
-    String[] lines = displayStrings();
 
-    Ansi.Color cardColor = "♥♦".contains(suit) ? Ansi.Color.RED : Ansi.Color.BLACK;
-    return ansi()
+    String[] lines = getDispplayCard();
+
+    Ansi.Color cardColor = getColorCard();
+
+    return getDisplayCard(lines, cardColor);
+  }
+
+  private String getDisplayCard(String[] lines, Ansi.Color cardColor) {
+    return  ansi()
         .fg(cardColor).toString()
         + String.join(ansi().cursorDown(1)
                             .cursorLeft(11)
                             .toString(), lines);
   }
 
-  private String[] displayStrings() {
+  private Ansi.Color getColorCard() {
+    return "♥♦".contains(suit) ? Ansi.Color.RED : Ansi.Color.BLACK;
+  }
+
+  private String[] getDispplayCard() {
     String[] lines = new String[7];
     lines[0] = "┌─────────┐";
     lines[1] = String.format("│%s%s       │", rank, rank.equals("10") ? "" : " ");
