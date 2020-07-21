@@ -14,13 +14,25 @@ public class Card {
   }
 
   public int rankValue() {
-    if ("JQK".contains(rank)) {
+    if (isFaceCard()) {  //Extract to query
       return 10;
-    } else if (rank.equals("A")) {
-      return 1;
-    } else {
-      return Integer.parseInt(rank);
     }
+    if (isAce()) { //Extract to query
+      return 1;
+    }
+    return internalRankValue(rank); //Extract to query
+  }
+
+  private int internalRankValue(String rank) {
+    return Integer.parseInt(rank); //Introduce parameter
+  }
+
+  private boolean isAce() {
+    return rank.equals("A");
+  }
+
+  private boolean isFaceCard() {
+    return "JQK".contains(rank);
   }
 
   public String display() {
