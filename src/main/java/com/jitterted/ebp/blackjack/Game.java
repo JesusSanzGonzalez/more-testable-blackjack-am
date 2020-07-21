@@ -55,10 +55,10 @@ public class Game {
     while (!playerBusted) {
       displayGameState();
       String playerChoice = inputFromPlayer().toLowerCase();
-      if (playerChoice.startsWith("s")) {
+      if (playerChoice.startsWith("s")) {  //primitive Obsession
         break;
       }
-      if (playerChoice.startsWith("h")) {
+      if (playerChoice.startsWith("h")) {  //primitive Obsession
         playerHand.add(deck.draw());
         if (handValueOf(playerHand) > 21) {
           playerBusted = true;
